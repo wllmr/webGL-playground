@@ -1,6 +1,6 @@
-import { GUI } from "dat.gui";
 import { useEffect } from "react";
-import { Box } from "./objects/Box";
+import { ColorBox } from "./objects/ColorBox";
+import { TextureBox } from "./objects/TextureBox";
 import { Scenery } from "./scene/Scenery";
 
 export function Game() {
@@ -9,11 +9,21 @@ export function Game() {
     scenery.initialize();
     scenery.animate();
 
-    const box = new Box();
-    scenery.scene?.add(box.mesh);
+    const colorBox = new ColorBox();
+    const textureBox = new TextureBox();
 
-    const gui = new GUI();
-    box.addGui(gui);
+    colorBox.mesh.position.x = -10;
+    textureBox.mesh.position.x = 10;
+
+    scenery.scene?.add(colorBox.mesh, textureBox.mesh);
+
+    colorBox.addGui();
+    textureBox.addGui();
+
+    return () => {
+      colorBox.cleanup();
+      textureBox.cleanup();
+    };
   }, []);
 
   return <canvas id="game-root" />;
