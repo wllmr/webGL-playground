@@ -5,13 +5,13 @@ export class TextureBox extends BaseBox {
   texture: THREE.Texture;
   material: THREE.MeshStandardMaterial;
 
-  constructor() {
+  constructor(id: string) {
     const texture = new THREE.TextureLoader().load("./assets/uv.jpeg");
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-
     const material = new THREE.MeshStandardMaterial({ map: texture });
-    super(material);
+
+    super(id, material);
 
     this.texture = texture;
     this.material = material;
@@ -21,10 +21,12 @@ export class TextureBox extends BaseBox {
       this.geometrySettings.depth
     );
     this.mesh = new THREE.Mesh(this.geometry, this.material);
+
+    this.addTextureGUI();
   }
 
-  addGui() {
-    super.addGui();
+  private addTextureGUI() {
+    this.addBoxGUI();
 
     const textureSettings = {
       repeatX: 1,
@@ -39,6 +41,8 @@ export class TextureBox extends BaseBox {
       this.texture.offset.set(textureSettings.offsetX, textureSettings.offsetY);
       this.texture.rotation = textureSettings.rotation;
       this.texture.needsUpdate = true;
+
+      this.mesh.updateMatrix();
     };
 
     const textureFolder = this.gui.addFolder("Texture");
@@ -57,5 +61,6 @@ export class TextureBox extends BaseBox {
     textureFolder
       .add(textureSettings, "rotation", 0, Math.PI * 2, 0.01)
       .onChange(updateTexture);
+    textureFolder.add(this.material, "wireframe").name("Wireframe");
   }
 }

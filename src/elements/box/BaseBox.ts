@@ -1,9 +1,8 @@
-import { GUI } from "dat.gui";
 import * as THREE from "three";
-import { BaseElement } from "./BaseElement";
+import { GUIManager } from "../../utils/GuiManager";
+import { BaseElement } from "../BaseElement";
 
-export class BaseBox implements BaseElement {
-  gui: GUI = new GUI();
+export abstract class BaseBox extends BaseElement {
   geometrySettings: {
     width?: number;
     height?: number;
@@ -17,7 +16,9 @@ export class BaseBox implements BaseElement {
   material: THREE.Material;
   mesh: THREE.Mesh;
 
-  constructor(material: THREE.Material) {
+  constructor(id: string, material: THREE.Material) {
+    super(id);
+
     this.material = material;
     this.geometry = new THREE.BoxGeometry(
       this.geometrySettings.width,
@@ -27,7 +28,7 @@ export class BaseBox implements BaseElement {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
   }
 
-  addGui() {
+  protected addBoxGUI() {
     const rotationFolder = this.gui.addFolder("Rotation");
     rotationFolder
       .add(this.mesh.rotation, "x", 0, Math.PI)
@@ -46,6 +47,6 @@ export class BaseBox implements BaseElement {
   }
 
   cleanup() {
-    this.gui.destroy();
+    GUIManager.instance.removeFolder(this.id);
   }
 }

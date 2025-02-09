@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { ColorBox } from "./objects/ColorBox";
-import { TextureBox } from "./objects/TextureBox";
+import { ColorBox } from "./elements/box/ColorBox";
+import { TextureBox } from "./elements/box/TextureBox";
 import { Scenery } from "./scene/Scenery";
 
 export function Game() {
@@ -9,16 +9,13 @@ export function Game() {
     scenery.initialize();
     scenery.animate();
 
-    const colorBox = new ColorBox();
-    const textureBox = new TextureBox();
+    const colorBox = new ColorBox("Color Box");
+    const textureBox = new TextureBox("Texture Box");
 
     colorBox.mesh.position.x = -10;
     textureBox.mesh.position.x = 10;
 
     scenery.scene?.add(colorBox.mesh, textureBox.mesh);
-
-    colorBox.addGui();
-    textureBox.addGui();
 
     return () => {
       colorBox.cleanup();

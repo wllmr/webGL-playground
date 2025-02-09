@@ -4,9 +4,10 @@ import { BaseBox } from "./BaseBox";
 export class ColorBox extends BaseBox {
   material: THREE.MeshPhongMaterial;
 
-  constructor() {
+  constructor(id: string) {
     const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-    super(material);
+
+    super(id, material);
 
     this.material = material;
     this.geometry = new THREE.BoxGeometry(
@@ -15,10 +16,12 @@ export class ColorBox extends BaseBox {
       this.geometrySettings.depth
     );
     this.mesh = new THREE.Mesh(this.geometry, this.material);
+
+    this.addColorGUI();
   }
 
-  addGui() {
-    super.addGui();
+  private addColorGUI() {
+    this.addBoxGUI();
 
     const meshFolder = this.gui.addFolder("Mesh material");
     meshFolder.add(this.material, "wireframe").name("Wireframe");
