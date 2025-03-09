@@ -3,7 +3,6 @@ import { GUI } from "dat.gui";
 export class GUIManager {
   private static _instance: GUIManager;
   private gui: GUI;
-  private folders: Record<string, GUI> = {};
 
   private constructor() {
     this.gui = new GUI();
@@ -17,17 +16,20 @@ export class GUIManager {
   }
 
   folder(name: string) {
-    if (!this.folders[name]) {
-      this.folders[name] = this.gui.addFolder(name);
+    if (!this.gui.__folders[name]) {
+      this.gui.addFolder(name);
     }
 
-    return this.folders[name];
+    return this.gui.__folders[name];
   }
 
   removeFolder(name: string) {
-    if (this.folders[name]) {
-      this.gui.removeFolder(this.folders[name]);
-      delete this.folders[name];
+    if (this.gui.__folders[name]) {
+      Object.values(this.gui.__folders[name].__folders).forEach((folder) => {
+        this.gui.__folders[name].removeFolder(folder);
+      });
+
+      this.gui.removeFolder(this.gui.__folders[name]);
     }
   }
 }
